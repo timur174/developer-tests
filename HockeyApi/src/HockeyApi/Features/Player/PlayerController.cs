@@ -15,11 +15,15 @@ namespace HockeyApi.Features.Player
         {
             _playerService = playerService;
         }
-
+        [HttpGet("Player")]
         public IActionResult Search(string q)
         {
-            //_playerService.
-            return View();
+            var players = _playerService.Search(q);
+            if(players == null)
+            {
+                return NotFound();
+            }
+            return Ok(players);
         }
     }
 }

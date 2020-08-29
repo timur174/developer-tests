@@ -24,10 +24,18 @@ namespace HockeyApi.Queries
 			using (var conn = _db.CreateConnection())
 			using (var cmd = conn.CreateCommand())
 			{
+				var playersSearchParam = cmd.CreateParameter();
+				playersSearchParam.Value = q;
+				playersSearchParam.ParameterName = "q";
+				cmd.Parameters.Add(playersSearchParam);
+
 				cmd.CommandText = @"
-                    SELECT TOP 10 * 
+                    SELECT TOP 10
+						first_name,
+						last_name,
+						player_id
 					FROM player
-					WHERE first_name LIKE '%%' OR last_name LIKE '%%'";
+					WHERE first_name LIKE '%'+@q+'%' OR last_name LIKE '%'+@q+ '%'";
 
 				using (var rd = cmd.ExecuteReader())
 				{

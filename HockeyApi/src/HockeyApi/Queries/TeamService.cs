@@ -44,7 +44,6 @@ namespace HockeyApi.Queries {
 			using (var conn = _db.CreateConnection())
 			using (var cmd = conn.CreateCommand())
 			{
-
 				var teamCodeParam = cmd.CreateParameter();
 				teamCodeParam.Value = team_code;
 				teamCodeParam.ParameterName = "team_code";
