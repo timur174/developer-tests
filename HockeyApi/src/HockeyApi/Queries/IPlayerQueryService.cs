@@ -8,7 +8,7 @@ namespace HockeyApi.Queries
     {
         IEnumerable<PlayerModel> Search(string q);
         PlayerTransactionsModel GetPlayerTransactions(int player_id);
-        PlayerStatusModel GetPlayerStatus(int playerId, IDbConnection dbConnection = null);
+        PlayerStatusModel GetPlayerStatus(int playerId, IDbConnection dbConnection);
         bool CheckPlayerSigned(int player_id, IDbConnection dbConnection);
     }
 }

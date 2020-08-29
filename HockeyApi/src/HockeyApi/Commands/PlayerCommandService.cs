@@ -249,7 +249,7 @@ namespace HockeyApi.Commands
 
 				// 4) Validate if the player has been signed
 				var isPlayerEverSigned = _playerQueryService.CheckPlayerSigned(playerTradeCommand.playerId, conn);
-				if(isPlayerEverSigned)
+				if(!isPlayerEverSigned)
 				{
 					returnModel.IsSuccessfull = false;
 					returnModel.Message = PLAYER_HAS_NEVER_BEEN_SIGNED;

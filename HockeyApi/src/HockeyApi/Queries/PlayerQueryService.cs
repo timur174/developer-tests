@@ -53,7 +53,7 @@ namespace HockeyApi.Queries
 			return players;
 		}
 
-		public PlayerStatusModel GetPlayerStatus(int playerId, IDbConnection dbConnection = null)
+		public PlayerStatusModel GetPlayerStatus(int playerId, IDbConnection dbConnection)
 		{
 			var playerStatusModel = new PlayerStatusModel();
 			using (var cmd = dbConnection.CreateCommand())
@@ -87,11 +87,12 @@ namespace HockeyApi.Queries
 			var playerTransactions = new PlayerTransactionsModel();
 
 			using (var conn = _db.CreateConnection())
-			using (var cmd = conn.CreateCommand())
 			{
-				cmd.CreateParameter(player_id, "player_id");
+				using (var cmd = conn.CreateCommand())
+				{
+					cmd.CreateParameter(player_id, "player_id");
 
-				cmd.CommandText = @"
+					cmd.CommandText = @"
                     SELECT TOP 10
 						p.first_name,
 						p.last_name,
@@ -108,16 +109,17 @@ namespace HockeyApi.Queries
 					ORDER BY
 						effective_date DESC";
 
-				using (var rd = cmd.ExecuteReader())
-				{
-					while (rd.Read())
+					using (var rd = cmd.ExecuteReader())
 					{
-						var transaction = new {FirstName = rd.GetString(0), LastName = rd.GetString(1), PlayerId= rd.GetInt32(2), TeamName = rd.GetString(3), Label = rd.GetString(4), EffectiveDate = rd.GetDateTime(5) };
-						if(playerTransactions.Details == null)
+						while (rd.Read())
 						{
-							playerTransactions.Details = new PlayerModel(transaction.FirstName, transaction.LastName, transaction.PlayerId);
+							var transaction = new { FirstName = rd.GetString(0), LastName = rd.GetString(1), PlayerId = rd.GetInt32(2), TeamName = rd.GetString(3), Label = rd.GetString(4), EffectiveDate = rd.GetDateTime(5) };
+							if (playerTransactions.Details == null)
+							{
+								playerTransactions.Details = new PlayerModel(transaction.FirstName, transaction.LastName, transaction.PlayerId);
+							}
+							playerTransactions.Transactions.Add(new TransactionModel(transaction.TeamName, transaction.Label, transaction.EffectiveDate));
 						}
-						playerTransactions.Transactions.Add(new TransactionModel(transaction.TeamName, transaction.Label, transaction.EffectiveDate));
 					}
 				}
 			}
