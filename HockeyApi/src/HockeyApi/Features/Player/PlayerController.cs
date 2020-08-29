@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using HockeyApi.Commands;
 using HockeyApi.Models;
 using HockeyApi.Queries;
 using Microsoft.AspNetCore.Mvc;
@@ -11,10 +12,16 @@ namespace HockeyApi.Features.Player
     public class PlayerController : Controller
     {
         private readonly IPlayerQueryService _playerService;
-
-        public PlayerController(IPlayerQueryService playerService)
+        private readonly IPlayerCommandService _playerCommandService;
+        private const string MODEL_IS_NOT_VALID = "Model is not valid";
+        public PlayerController
+        (
+            IPlayerQueryService playerService,
+            IPlayerCommandService playerCommandService
+        )
         {
             _playerService = playerService;
+            _playerCommandService = playerCommandService;
         }
         [HttpGet("Player")]
         public IActionResult Search(string q)
@@ -38,15 +45,20 @@ namespace HockeyApi.Features.Player
             return Ok(playertransactions);
         }
 
-        [HttpGet("Player/{player_id}")]
-        public IActionResult Create(PlayerAssignCommand playerAssignModel)
+        [HttpPost("Player")]
+        public IActionResult Create([FromBody]PlayerAssignCommand playerAssignModel)
         {
-            var playertransactions = _playerService.GetPlayerTransactions(player_id);
-            if (playertransactions.Transactions.Count == 0)
+            var returnResult = new ReturnModel();
+            if (ModelState.IsValid)
             {
-                return NotFound();
+                returnResult = _playerCommandService.AssignPlayer(playerAssignModel);
             }
-            return Ok(playertransactions);
+            else
+            {
+                returnResult.IsSuccessfull = false;
+                returnResult.Message = MODEL_IS_NOT_VALID;
+            }
+            return Ok(returnResult);
         }
     }
 }

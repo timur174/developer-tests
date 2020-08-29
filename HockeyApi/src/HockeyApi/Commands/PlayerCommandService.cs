@@ -31,7 +31,7 @@ namespace HockeyApi.Commands
 		public ReturnModel AssignPlayer(PlayerAssignCommand playerAssignCommand)
 		{
 			var returnModel = new ReturnModel();
-			var team_code = playerAssignCommand.TeamCode;
+			var team_code = playerAssignCommand.teamCode;
 			using (var conn = _db.CreateConnection())
 			{
 				// 1) Validate if team exist
@@ -78,9 +78,9 @@ namespace HockeyApi.Commands
 				using (var cmdInsert = conn.CreateCommand())
 				{
 					cmdInsert.Parameters.Add(CreateParameter(cmdInsert, team_code, "TeamCode"));
-					cmdInsert.Parameters.Add(CreateParameter(cmdInsert, playerAssignCommand.FirstName, "FirstName"));
-					cmdInsert.Parameters.Add(CreateParameter(cmdInsert, playerAssignCommand.LastName, "LastName"));
-					cmdInsert.Parameters.Add(CreateParameter(cmdInsert, playerAssignCommand.EffectiveDate, "EffectiveDate"));
+					cmdInsert.Parameters.Add(CreateParameter(cmdInsert, playerAssignCommand.firstName, "FirstName"));
+					cmdInsert.Parameters.Add(CreateParameter(cmdInsert, playerAssignCommand.lastName, "LastName"));
+					cmdInsert.Parameters.Add(CreateParameter(cmdInsert, playerAssignCommand.effectiveDate, "EffectiveDate"));
 
 					cmdInsert.CommandText = @"
 						INSERT INTO player(first_name, last_name)
@@ -110,7 +110,7 @@ namespace HockeyApi.Commands
 			var param = command.CreateParameter();
 			param.Value = value;
 			param.ParameterName = name;
-			return param
+			return param;
 		}
 
 	}

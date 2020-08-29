@@ -7,9 +7,9 @@ namespace HockeyApi.Models
 {
     public class PlayerAssignCommand
     {
-        public string LastName { get; set; }
-        public string FirstName { get; set; }
-        public string TeamCode { get; set; }
-        public DateTime EffectiveDate { get; set; }
+        public string lastName { get; set; }
+        public string firstName { get; set; }
+        public string teamCode { get; set; }
+        public DateTime effectiveDate { get; set; }
     }
 }
