@@ -1,10 +1,9 @@
 ﻿using System.Collections.Generic;
 using HockeyApi.Common;
+using HockeyApi.Models;
 
-namespace HockeyApi.Features {
-	public interface ITeamService {
-		IEnumerable<TeamModel> List();
-	}
+namespace HockeyApi.Queries {
+
 
 	public class TeamService : ITeamService {
 		private readonly IDb _db;

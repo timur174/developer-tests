@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using HockeyApi.Queries;
+using Microsoft.AspNetCore.Mvc;
 
 namespace HockeyApi.Features {
 	public class TeamController : Controller {

@@ -1,5 +1,6 @@
 using HockeyApi.Common;
 using HockeyApi.Features;
+using HockeyApi.Queries;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
