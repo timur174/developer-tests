@@ -1,5 +1,6 @@
 ﻿using HockeyApi.Models;
 using System.Collections.Generic;
+using System.Data;
 
 namespace HockeyApi.Queries
 {
@@ -7,5 +8,6 @@ namespace HockeyApi.Queries
     {
         IEnumerable<PlayerModel> Search(string q);
         PlayerTransactionsModel GetPlayerTransactions(int player_id);
+        PlayerStatusModel GetPlayerStatus(int playerId, IDbConnection dbConnection = null);
     }
 }

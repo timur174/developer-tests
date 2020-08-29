@@ -5,9 +5,11 @@ using System.Threading.Tasks;
 
 namespace HockeyApi.Models
 {
-    public class PlayerInjuryHealthCommand
+    public enum PlayerStatusEnum
     {
-        public int playerId { get; set; }
-        public DateTime effectiveDate { get; set; }
+        Signed = 1,
+        Injured,
+        Healthy,
+        Treaded
     }
 }

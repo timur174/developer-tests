@@ -5,11 +5,10 @@ using System.Threading.Tasks;
 
 namespace HockeyApi.Models
 {
-    public enum PlayerStatus
+    public class PlayerStatusModel
     {
-        Signed=1,
-        Injured,
-        Healthy,
-        Treaded
+        public string TeamCode { get; set; }
+
+        public int TransactionTypeId { get; set; }
     }
 }

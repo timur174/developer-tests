@@ -60,5 +60,37 @@ namespace HockeyApi.Features.Player
             }
             return Ok(returnResult);
         }
+
+        [HttpPost("player/{player_id}/injured")]
+        public IActionResult Injure([FromBody]PlayerInjuryHealthCommand playerInjuryModel)
+        {
+            var returnResult = new ReturnModel();
+            if (ModelState.IsValid)
+            {
+                returnResult = _playerCommandService.InjurePlayer(playerInjuryModel);
+            }
+            else
+            {
+                returnResult.IsSuccessfull = false;
+                returnResult.Message = MODEL_IS_NOT_VALID;
+            }
+            return Ok(returnResult);
+        }
+
+        [HttpPost("player/{player_id}/healthy")]
+        public IActionResult Heal([FromBody]PlayerInjuryHealthCommand playerHealthyModel)
+        {
+            var returnResult = new ReturnModel();
+            if (ModelState.IsValid)
+            {
+                returnResult = _playerCommandService.InjurePlayer(playerInjuryModel);
+            }
+            else
+            {
+                returnResult.IsSuccessfull = false;
+                returnResult.Message = MODEL_IS_NOT_VALID;
+            }
+            return Ok(returnResult);
+        }
     }
 }

@@ -53,31 +53,34 @@ namespace HockeyApi.Queries
 			return players;
 		}
 
-		//public string GetPlayerStatus(int playerId, IDbConnection dbConnection = null)
-		//{
-		//	using (var cmd = dbConnection.CreateCommand())
-		//	{
-		//		cmd.CreateParameter(playerInjuryCommand.playerId, "PlayerId");
+		public PlayerStatusModel GetPlayerStatus(int playerId, IDbConnection dbConnection = null)
+		{
+			var playerStatusModel = new PlayerStatusModel();
+			using (var cmd = dbConnection.CreateCommand())
+			{
+				cmd.CreateParameter(playerId, "PlayerId");
 
-		//		cmd.CommandText = @"
-		//				SELECT TOP 1 
-		//					team_code,
-		//					roster_transaction_type_id
-		//				FROM
-		//					roster_transaction rt
-		//				WHERE
-		//					rt.player_id = @PlayerId
-		//				ORDER BY rt.effective_date DESC";
-		//		using (var rd = cmd.ExecuteReader())
-		//		{
-		//			while (rd.Read())
-		//			{
-		//				team_code = rd.GetString(0);
-		//				roster_transaction_type_id = rd.GetInt32(1);
-		//			}
-		//		}
-		//	}
-		//}
+				cmd.CommandText = @"
+						SELECT TOP 1 
+							team_code,
+							roster_transaction_type_id
+						FROM
+							roster_transaction rt
+						WHERE
+							rt.player_id = @PlayerId
+						ORDER BY rt.effective_date DESC";
+				using (var rd = cmd.ExecuteReader())
+				{
+					while (rd.Read())
+					{
+						playerStatusModel.TeamCode = rd.GetString(0);
+						playerStatusModel.TransactionTypeId = rd.GetInt32(1);
+					}
+				}
+			}
+
+			return playerStatusModel;
+		}
 
 		public PlayerTransactionsModel GetPlayerTransactions(int player_id)
 		{
