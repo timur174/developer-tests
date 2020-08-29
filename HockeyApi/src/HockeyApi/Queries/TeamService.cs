@@ -48,8 +48,8 @@ namespace HockeyApi.Queries {
 						first_name,
 						last_name,
 						team_name,
-						IsActive,
-						rt.label as CurrentStatus
+						rt.label as CurrentStatus,
+						IsActive
 					FROM player p left join 
 					(
 					SELECT 
@@ -92,7 +92,7 @@ namespace HockeyApi.Queries {
 								rd.GetString(1),
 								rd.GetString(2),
 								rd.GetString(3),
-								rd.GetBoolean(4)));
+								rd.GetInt32(4)));
 					}
 				}
 			}

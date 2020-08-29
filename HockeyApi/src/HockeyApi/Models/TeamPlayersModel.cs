@@ -7,19 +7,20 @@ namespace HockeyApi.Models
 {
     public class TeamPlayersModel
     {
-        public TeamPlayersModel(string firstName, string lastName, string teamName, string currentPlayerStatus, bool isActive)
+        public TeamPlayersModel(string firstName, string lastName, string teamName, string currentPlayerStatus, int isActiveFlag)
         {
             FirstName = firstName;
             LastName = lastName;
             TeamName = teamName;
             CurrentPlayerStatus = currentPlayerStatus;
-            IsActive = isActive;
+            IsActiveFlag = isActiveFlag;
         }
 
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string TeamName { get; set; }
         public string CurrentPlayerStatus { get; set; }
-        public bool IsActive { get; set; }
+        public bool IsActive { get { return IsActiveFlag == 1; } }
+        private int IsActiveFlag { get; set; }
     }
 }
