@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using HockeyApi.Common;
 using HockeyApi.Models;
 
@@ -33,6 +34,70 @@ namespace HockeyApi.Queries {
 			}
 
 			return teams;
+		}
+
+		public IEnumerable<TeamPlayersModel> GetPlayers(string team_code)
+		{
+			var teamPlayers = new HashSet<TeamPlayersModel>();
+
+			using (var conn = _db.CreateConnection())
+			using (var cmd = conn.CreateCommand())
+			{
+				cmd.CommandText = @"
+					SELECT
+						first_name,
+						last_name,
+						team_name,
+						IsActive,
+						rt.label as CurrentStatus
+					FROM player p left join 
+					(
+					SELECT 
+						t1.player_id, 
+						rtt.label, 
+						t2.maxEffectiveDate, 
+						t1.team_code,
+					CASE WHEN t1.roster_transaction_type_id = 2 THEN 0 ELSE 1 END AS IsActive
+					FROM
+					(
+						SELECT 
+							Player_id, 
+							roster_transaction_type_id, 
+							effective_date,
+							team_code
+						FROM 
+							roster_transaction rt 
+					) t1 inner join
+					(
+						SELECT 
+							Player_id, 
+							Max(effective_date) AS maxEffectiveDate 
+						FROM 
+							roster_transaction rt 
+						GROUP BY 
+							player_id
+					) t2 ON t1.player_id = t2.player_id and t1.effective_date = t2.maxEffectiveDate
+					left join roster_transaction_type rtt ON t1.roster_transaction_type_id = rtt.roster_transaction_type_id
+					) rt
+					ON p.player_id = rt.player_id
+					left join team t ON rt.team_code = t.team_code";
+
+				using (var rd = cmd.ExecuteReader())
+				{
+					while (rd.Read())
+					{
+						teamPlayers.Add(
+							new TeamPlayersModel(
+								rd.GetString(0),
+								rd.GetString(1),
+								rd.GetString(2),
+								rd.GetString(3),
+								rd.GetBoolean(4)));
+					}
+				}
+			}
+
+			return teamPlayers;
 		}
 	}
 }

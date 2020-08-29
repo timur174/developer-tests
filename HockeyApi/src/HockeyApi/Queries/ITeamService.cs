@@ -9,5 +9,6 @@ namespace HockeyApi.Queries
 	public interface ITeamService
 	{
 		IEnumerable<TeamModel> List();
+		IEnumerable<TeamPlayersModel> GetPlayers(string team_code);
 	}
 }
