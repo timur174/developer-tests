@@ -30,9 +30,18 @@
 			document.body.style.fontFamily = fontFamilyName;
 		}	
 
+		// Task 2
+		hideElementsWithInstructionClass = () => {
+			let instructionsList = document.getElementsByClassName('instructions');
+			var arrayInstructions = Array.prototype.slice.call( instructionsList )
+			arrayInstructions.forEach((element, index) =>{
+				element.style.display = "none";
+			})
+		}
 
 		(function(){
 			setGlobalStyle();	
+			hideElementsWithInstructionClass();
 		})();
 	</script>
 </body>
