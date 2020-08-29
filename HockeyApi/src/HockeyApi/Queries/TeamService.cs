@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using HockeyApi.Common;
 using HockeyApi.Models;
 
@@ -43,6 +44,11 @@ namespace HockeyApi.Queries {
 			using (var conn = _db.CreateConnection())
 			using (var cmd = conn.CreateCommand())
 			{
+
+				var teamCodeParam = cmd.CreateParameter();
+				teamCodeParam.Value = team_code;
+				teamCodeParam.ParameterName = "team_code";
+				cmd.Parameters.Add(teamCodeParam);
 				cmd.CommandText = @"
 					SELECT
 						first_name,
@@ -80,7 +86,8 @@ namespace HockeyApi.Queries {
 					left join roster_transaction_type rtt ON t1.roster_transaction_type_id = rtt.roster_transaction_type_id
 					) rt
 					ON p.player_id = rt.player_id
-					left join team t ON rt.team_code = t.team_code";
+					left join team t ON rt.team_code = t.team_code
+					where rt.team_code = @team_code";
 
 				using (var rd = cmd.ExecuteReader())
 				{
