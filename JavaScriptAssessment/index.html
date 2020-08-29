@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>NHLPA JavaScript Assessment</title>
+	<style>
+		html { box-sizing: border-box; }
+		*, *::before, *::after { box-sizing: inherit; }
+		.stage { max-width: 40rem; margin-left: auto; margin-right: auto; }
+		code { background-color: #eee; }
+	</style>
+</head>
+<body>
+	<main class="stage">
+		<h1>JavaScript Assessment</h1>
+		<p class="instructions">Within the script tag immediately preceding the <code>&lt;/body&gt;</code> Complete the following steps without the aid of jQuery or any other external libraries. Modifying the markup directly is not permitted.</p>
+			<ol>
+				<li>Set the global global font family to: <code>font-family: sans-serif</code></li>
+				<li>Hide (i.e. <code>display: none</code>) any element(s) with the class: <code>.instructions</code></li>
+				<li>Execute AJAX request <code>GET https://jsonplaceholder.typicode.com/photos/1</code>. On success, append <code>&lt;img src="..." /&gt;</code> to body using the <code>thumbnailUrl</code> property returned in the JSON request.</li>
+				<li>Execute AJAX request <code>GET https://jsonplaceholder.typicode.com/posts?userId=1</code>. On success, for each item returned, append <code>&lt;a href="https://jsonplaceholder.typicode.com/posts/{id}"&gt;{title}&lt;a/&gt;</code> to body.</li>
+			</ol>			
+	</main>
+	<script type="text/javascript">
+		(function(){
+			// code goes here				
+		})();
+	</script>
+</body>
+
+</html>
