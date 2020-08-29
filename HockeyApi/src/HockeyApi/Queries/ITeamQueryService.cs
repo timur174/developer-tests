@@ -10,6 +10,7 @@ namespace HockeyApi.Queries
 	public interface ITeamQueryService
 	{
 		IEnumerable<TeamModel> List();
-		IEnumerable<TeamPlayersModel> GetPlayers(string team_code, IDbConnection dbConnection = null);
+		IEnumerable<TeamPlayersModel> GetPlayers(string team_code);
+		HashSet<TeamPlayersModel> GetPlayersDetails(string team_code, IDbConnection dbConnection = null);
 	}
 }

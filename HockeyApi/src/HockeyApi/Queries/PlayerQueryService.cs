@@ -2,6 +2,7 @@
 using HockeyApi.Models;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -24,11 +25,9 @@ namespace HockeyApi.Queries
 			using (var conn = _db.CreateConnection())
 			using (var cmd = conn.CreateCommand())
 			{
-				var playersSearchParam = cmd.CreateParameter();
-				playersSearchParam.Value = q;
-				playersSearchParam.ParameterName = "q";
-				cmd.Parameters.Add(playersSearchParam);
 
+				cmd.CreateParameter(q, "q");
+	
 				cmd.CommandText = @"
                     SELECT TOP 10
 						first_name,
@@ -53,6 +52,32 @@ namespace HockeyApi.Queries
 
 			return players;
 		}
+
+		//public string GetPlayerStatus(int playerId, IDbConnection dbConnection = null)
+		//{
+		//	using (var cmd = dbConnection.CreateCommand())
+		//	{
+		//		cmd.CreateParameter(playerInjuryCommand.playerId, "PlayerId");
+
+		//		cmd.CommandText = @"
+		//				SELECT TOP 1 
+		//					team_code,
+		//					roster_transaction_type_id
+		//				FROM
+		//					roster_transaction rt
+		//				WHERE
+		//					rt.player_id = @PlayerId
+		//				ORDER BY rt.effective_date DESC";
+		//		using (var rd = cmd.ExecuteReader())
+		//		{
+		//			while (rd.Read())
+		//			{
+		//				team_code = rd.GetString(0);
+		//				roster_transaction_type_id = rd.GetInt32(1);
+		//			}
+		//		}
+		//	}
+		//}
 
 		public PlayerTransactionsModel GetPlayerTransactions(int player_id)
 		{

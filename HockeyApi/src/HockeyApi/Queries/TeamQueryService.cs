@@ -37,19 +37,25 @@ namespace HockeyApi.Queries {
 			return teams;
 		}
 
-		public IEnumerable<TeamPlayersModel> GetPlayers(string team_code, IDbConnection dbConnection = null)
+		public IEnumerable<TeamPlayersModel> GetPlayers(string team_code)
 		{
 			var teamPlayers = new HashSet<TeamPlayersModel>();
-
-			using (var conn = dbConnection ?? _db.CreateConnection())
+			
+			using (var conn = _db.CreateConnection())
 			{
-				using (var cmd = conn.CreateCommand())
-				{
-					var teamCodeParam = cmd.CreateParameter();
-					teamCodeParam.Value = team_code;
-					teamCodeParam.ParameterName = "team_code";
-					cmd.Parameters.Add(teamCodeParam);
-					cmd.CommandText = @"
+				teamPlayers = GetPlayersDetails(team_code, conn);
+			}
+
+			return teamPlayers;
+		}
+
+		public HashSet<TeamPlayersModel> GetPlayersDetails(string team_code, IDbConnection dbConnection = null)
+		{
+			var teamPlayers = new HashSet<TeamPlayersModel>();
+			using (var cmd = dbConnection.CreateCommand())
+			{
+				cmd.CreateParameter(team_code, "team_code");
+				cmd.CommandText = @"
 					SELECT
 						first_name,
 						last_name,
@@ -89,23 +95,23 @@ namespace HockeyApi.Queries {
 					left join team t ON rt.team_code = t.team_code
 					where rt.team_code = @team_code";
 
-					using (var rd = cmd.ExecuteReader())
+				using (var rd = cmd.ExecuteReader())
+				{
+					while (rd.Read())
 					{
-						while (rd.Read())
-						{
-							teamPlayers.Add(
-								new TeamPlayersModel(
-									rd.GetString(0),
-									rd.GetString(1),
-									rd.GetString(2),
-									rd.GetString(3),
-									rd.GetInt32(4)));
-						}
+						teamPlayers.Add(
+							new TeamPlayersModel(
+								rd.GetString(0),
+								rd.GetString(1),
+								rd.GetString(2),
+								rd.GetString(3),
+								rd.GetInt32(4)));
 					}
 				}
 			}
-
 			return teamPlayers;
 		}
+
+
 	}
 }
