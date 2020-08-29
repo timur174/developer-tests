@@ -6,5 +6,7 @@ namespace HockeyApi.Commands
     {
         ReturnModel AssignPlayer(PlayerAssignCommand playerAssignCommand);
         ReturnModel InjurePlayer(PlayerInjuryHealthCommand playerInjuryCommand);
+        ReturnModel HealPlayer(PlayerInjuryHealthCommand playerHealthyCommand);
+        ReturnModel TradePlayer(TradeCommand playerTradeCommand);
     }
 }

@@ -89,10 +89,7 @@ namespace HockeyApi.Queries
 			using (var conn = _db.CreateConnection())
 			using (var cmd = conn.CreateCommand())
 			{
-				var playersSearchParam = cmd.CreateParameter();
-				playersSearchParam.Value = player_id;
-				playersSearchParam.ParameterName = "player_id";
-				cmd.Parameters.Add(playersSearchParam);
+				cmd.CreateParameter(player_id, "player_id");
 
 				cmd.CommandText = @"
                     SELECT TOP 10
@@ -126,6 +123,37 @@ namespace HockeyApi.Queries
 			}
 
 			return playerTransactions;
+		}
+
+		public bool CheckPlayerSigned(int player_id, IDbConnection dbConnection)
+		{
+			var returnResult = false;
+			using (var cmd = dbConnection.CreateCommand())
+			{
+				cmd.CreateParameter(player_id, "player_id");
+
+				cmd.CommandText = @"
+                    SELECT 
+						Count(player_id)
+					FROM 
+						roster_transaction
+					WHERE 
+						player_id = @player_id
+						and roster_transaction_type_id = 1";
+
+				using (var rd = cmd.ExecuteReader())
+				{
+					while (rd.Read())
+					{
+						if (rd.GetInt32(0) > 0)
+						{
+							returnResult = true;
+						}
+					}
+				}
+			}
+
+			return returnResult;
 		}
 
 	}

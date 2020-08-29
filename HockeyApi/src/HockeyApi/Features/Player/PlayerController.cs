@@ -83,7 +83,23 @@ namespace HockeyApi.Features.Player
             var returnResult = new ReturnModel();
             if (ModelState.IsValid)
             {
-                returnResult = _playerCommandService.InjurePlayer(playerInjuryModel);
+                returnResult = _playerCommandService.HealPlayer(playerHealthyModel);
+            }
+            else
+            {
+                returnResult.IsSuccessfull = false;
+                returnResult.Message = MODEL_IS_NOT_VALID;
+            }
+            return Ok(returnResult);
+        }
+
+        [HttpPost("player/{player_id}/trade")]
+        public IActionResult Trade([FromBody]TradeCommand playerTradeModel)
+        {
+            var returnResult = new ReturnModel();
+            if (ModelState.IsValid)
+            {
+                returnResult = _playerCommandService.TradePlayer(playerTradeModel);
             }
             else
             {
