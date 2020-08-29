@@ -7,10 +7,10 @@ using HockeyApi.Models;
 namespace HockeyApi.Queries {
 
 
-	public class TeamService : ITeamService {
+	public class TeamQueryService : ITeamQueryService {
 		private readonly IDb _db;
 
-		public TeamService(IDb db) {
+		public TeamQueryService(IDb db) {
 			_db = db;
 		}
 
@@ -37,18 +37,19 @@ namespace HockeyApi.Queries {
 			return teams;
 		}
 
-		public IEnumerable<TeamPlayersModel> GetPlayers(string team_code)
+		public IEnumerable<TeamPlayersModel> GetPlayers(string team_code, IDbConnection dbConnection = null)
 		{
 			var teamPlayers = new HashSet<TeamPlayersModel>();
 
-			using (var conn = _db.CreateConnection())
-			using (var cmd = conn.CreateCommand())
+			using (var conn = dbConnection ?? _db.CreateConnection())
 			{
-				var teamCodeParam = cmd.CreateParameter();
-				teamCodeParam.Value = team_code;
-				teamCodeParam.ParameterName = "team_code";
-				cmd.Parameters.Add(teamCodeParam);
-				cmd.CommandText = @"
+				using (var cmd = conn.CreateCommand())
+				{
+					var teamCodeParam = cmd.CreateParameter();
+					teamCodeParam.Value = team_code;
+					teamCodeParam.ParameterName = "team_code";
+					cmd.Parameters.Add(teamCodeParam);
+					cmd.CommandText = @"
 					SELECT
 						first_name,
 						last_name,
@@ -88,17 +89,18 @@ namespace HockeyApi.Queries {
 					left join team t ON rt.team_code = t.team_code
 					where rt.team_code = @team_code";
 
-				using (var rd = cmd.ExecuteReader())
-				{
-					while (rd.Read())
+					using (var rd = cmd.ExecuteReader())
 					{
-						teamPlayers.Add(
-							new TeamPlayersModel(
-								rd.GetString(0),
-								rd.GetString(1),
-								rd.GetString(2),
-								rd.GetString(3),
-								rd.GetInt32(4)));
+						while (rd.Read())
+						{
+							teamPlayers.Add(
+								new TeamPlayersModel(
+									rd.GetString(0),
+									rd.GetString(1),
+									rd.GetString(2),
+									rd.GetString(3),
+									rd.GetInt32(4)));
+						}
 					}
 				}
 			}

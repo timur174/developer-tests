@@ -1,3 +1,4 @@
+using HockeyApi.Commands;
 using HockeyApi.Common;
 using HockeyApi.Features;
 using HockeyApi.Queries;
@@ -45,8 +46,9 @@ namespace HockeyApi {
 		{
 			var connStr = _configuration.GetSection("ConnectionStrings:ConnectionTeamPlayersDb").Value;
 			services.AddScoped<IDb>(_ => new Db(connStr));
-			services.AddScoped<ITeamService, TeamService>();
-			services.AddScoped<IPlayerService, PlayerService>();
+			services.AddScoped<ITeamQueryService, TeamQueryService>();
+			services.AddScoped<IPlayerQueryService, PlayerQueryService>();
+			services.AddScoped<IPlayerCommandService, PlayerCommandService>();
 		}
 	}
 }

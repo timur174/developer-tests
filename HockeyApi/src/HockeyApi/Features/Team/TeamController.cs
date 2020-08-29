@@ -3,9 +3,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace HockeyApi.Features {
 	public class TeamController : Controller {
-		private readonly ITeamService _teamService;
+		private readonly ITeamQueryService _teamService;
 
-		public TeamController(ITeamService teamService) {
+		public TeamController(ITeamQueryService teamService) {
 			_teamService = teamService;
 		}
 

@@ -7,12 +7,12 @@ using System.Threading.Tasks;
 
 namespace HockeyApi.Queries
 {
-    public class PlayerService : IPlayerService
+    public class PlayerQueryService : IPlayerQueryService
     {
 
 		private readonly IDb _db;
 
-		public PlayerService(IDb db)
+		public PlayerQueryService(IDb db)
 		{
 			_db = db;
 		}

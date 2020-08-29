@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using HockeyApi.Models;
 using HockeyApi.Queries;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,9 +10,9 @@ namespace HockeyApi.Features.Player
 {
     public class PlayerController : Controller
     {
-        private readonly IPlayerService _playerService;
+        private readonly IPlayerQueryService _playerService;
 
-        public PlayerController(IPlayerService playerService)
+        public PlayerController(IPlayerQueryService playerService)
         {
             _playerService = playerService;
         }
@@ -28,6 +29,17 @@ namespace HockeyApi.Features.Player
 
         [HttpGet("Player/{player_id}")]
         public IActionResult Player(int player_id)
+        {
+            var playertransactions = _playerService.GetPlayerTransactions(player_id);
+            if (playertransactions.Transactions.Count == 0)
+            {
+                return NotFound();
+            }
+            return Ok(playertransactions);
+        }
+
+        [HttpGet("Player/{player_id}")]
+        public IActionResult Create(PlayerAssignCommand playerAssignModel)
         {
             var playertransactions = _playerService.GetPlayerTransactions(player_id);
             if (playertransactions.Transactions.Count == 0)
