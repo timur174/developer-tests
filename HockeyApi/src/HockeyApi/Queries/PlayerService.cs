@@ -54,5 +54,37 @@ namespace HockeyApi.Queries
 			return players;
 		}
 
+		public IEnumerable<PlayerTransactionsModel> Player(int player_id)
+		{
+			var playerTransactions = new HashSet<PlayerTransactionsModel>();
+
+			using (var conn = _db.CreateConnection())
+			using (var cmd = conn.CreateCommand())
+			{
+				var playersSearchParam = cmd.CreateParameter();
+				playersSearchParam.Value = player_id;
+				playersSearchParam.ParameterName = "player_id";
+				cmd.Parameters.Add(playersSearchParam);
+
+				cmd.CommandText = @"
+                    SELECT TOP 10
+						first_name,
+						last_name,
+						player_id
+					FROM player
+					WHERE first_name LIKE '%'+@q+'%' OR last_name LIKE '%'+@q+ '%'";
+
+				using (var rd = cmd.ExecuteReader())
+				{
+					while (rd.Read())
+					{
+	
+					}
+				}
+			}
+
+			return playerTransactions;
+		}
+
 	}
 }
