@@ -24,10 +24,8 @@ namespace HockeyApi {
 			  .AddControllers(o => {
 				  o.EnableEndpointRouting = true;
 			  });
+			RegisterDependencies(services);
 
-			string connStr = _configuration.GetConnectionString("Default");
-			services.AddScoped<IDb>(_ => new Db(_configuration.GetConnectionString("Default")));
-			services.AddScoped<ITeamService, TeamService>();
 		}
 
 		public void Configure(IApplicationBuilder app) {
@@ -42,5 +40,13 @@ namespace HockeyApi {
 			ctx.Response.StatusCode = 404;
 			await ctx.Response.WriteAsync("Page not found.");
 		};
+
+		private void RegisterDependencies(IServiceCollection services)
+		{
+			var connStr = _configuration.GetSection("ConnectionStrings:ConnectionTeamPlayersDb").Value;
+			services.AddScoped<IDb>(_ => new Db(connStr));
+			services.AddScoped<ITeamService, TeamService>();
+			services.AddScoped<IPlayerService, PlayerService>();
+		}
 	}
 }
