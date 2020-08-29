@@ -25,5 +25,16 @@ namespace HockeyApi.Features.Player
             }
             return Ok(players);
         }
+
+        [HttpGet("Player/{player_id}")]
+        public IActionResult Player(int player_id)
+        {
+            var playertransactions = _playerService.GetPlayerTransactions(player_id);
+            if (playertransactions.Transactions.Count == 0)
+            {
+                return NotFound();
+            }
+            return Ok(playertransactions);
+        }
     }
 }

@@ -54,9 +54,9 @@ namespace HockeyApi.Queries
 			return players;
 		}
 
-		public IEnumerable<PlayerTransactionsModel> Player(int player_id)
+		public PlayerTransactionsModel GetPlayerTransactions(int player_id)
 		{
-			var playerTransactions = new HashSet<PlayerTransactionsModel>();
+			var playerTransactions = new PlayerTransactionsModel();
 
 			using (var conn = _db.CreateConnection())
 			using (var cmd = conn.CreateCommand())
@@ -68,17 +68,31 @@ namespace HockeyApi.Queries
 
 				cmd.CommandText = @"
                     SELECT TOP 10
-						first_name,
-						last_name,
-						player_id
-					FROM player
-					WHERE first_name LIKE '%'+@q+'%' OR last_name LIKE '%'+@q+ '%'";
+						p.first_name,
+						p.last_name,
+						p.player_id,
+						t.team_name,
+						rtt.label,
+						rt.effective_date
+					FROM 
+						player p left join roster_transaction rt ON p.player_id = rt.player_id
+						left join team t on rt.team_code = t.team_code
+						left join roster_transaction_type rtt ON rt.roster_transaction_type_id = rtt.roster_transaction_type_id
+					WHERE
+						p.player_id = @player_id
+					ORDER BY
+						effective_date DESC";
 
 				using (var rd = cmd.ExecuteReader())
 				{
 					while (rd.Read())
 					{
-	
+						var transaction = new {FirstName = rd.GetString(0), LastName = rd.GetString(1), PlayerId= rd.GetInt32(2), TeamName = rd.GetString(3), Label = rd.GetString(4), EffectiveDate = rd.GetDateTime(5) };
+						if(playerTransactions.Details == null)
+						{
+							playerTransactions.Details = new PlayerModel(transaction.FirstName, transaction.LastName, transaction.PlayerId);
+						}
+						playerTransactions.Transactions.Add(new TransactionModel(transaction.TeamName, transaction.Label, transaction.EffectiveDate));
 					}
 				}
 			}

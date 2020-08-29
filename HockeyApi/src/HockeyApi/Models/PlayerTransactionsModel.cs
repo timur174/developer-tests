@@ -7,10 +7,8 @@ namespace HockeyApi.Models
 {
     public class PlayerTransactionsModel
     {
-        public PlayerTransactionsModel(PlayerModel details, TransactionModel transactionModel)
+        public PlayerTransactionsModel()
         {
-            Details = details;
-            //if(Transactions)
             Transactions = new List<TransactionModel>();
         }
 
